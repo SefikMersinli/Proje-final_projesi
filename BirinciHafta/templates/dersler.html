@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Öğrenci Bilgi Sistemi - Dersler</title>
+    
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='dersler.css') }}">
+        <style>
+           :root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    background-color: var(--secondary-color);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    padding-top: 20px;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 5px;
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(19, 223, 0, 0.884);
+    color: white;
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    color: #6c757d;
+}
+
+.search-box input {
+    padding-left: 40px;
+    border-radius: 20px;
+}
+
+.subject-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: white;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+} 
+        </style>
+    </head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="text-center mb-4">
+                    <h4>Öğrenci Bilgi Sistemi</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('index')}}">
+                        <i class="fas fa-tachometer-alt me-2"></i>anasayfa
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ogrenciler.html">
+                            <i class="fas fa-users"></i>Öğrenciler
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dersler.html">
+                            <i class="fas fa-book"></i>Dersler
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="notlar.html">
+                            <i class="fas fa-graduation-cap"></i>Notlar
+                        </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="raporlar.html">
+                                <i class="fas fa-chart-bar"></i>Raporlar
+                            </a>
+                        </li>
+
+<li class="nav-item mt-3">
+    <a class="nav-link text-danger" href="cikis_ekrani.html">
+        <i class="fas fa-sign-out-alt"></i>Çıkış Yap
+    </a>
+</li>
+</ul>
+            </div>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Ders Yönetimi</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#yeniDersModal">
+                            <i class="fas fa-plus"></i> Yeni Ders
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Tüm Dersler</h5>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" placeholder="Ders ara...">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="subject-icon bg-primary">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Matematik</h6>
+                                        <small class="text-muted">Öğretmen: Ayşe Demirci | Öğrenci Sayısı: 45</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="subject-icon bg-success">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Fizik</h6>
+                                        <small class="text-muted">Öğretmen: Mehmet keleşoğlu | Öğrenci Sayısı: 32</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="subject-icon bg-danger">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Kimya</h6>
+                                        <small class="text-muted">Öğretmen: Özge Topal | Öğrenci Sayısı: 28</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="subject-icon bg-warning">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Türkçe</h6>
+                                        <small class="text-muted">Öğretmen: Ahmet Kutucu | Öğrenci Sayısı: 50</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="subject-icon bg-info">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Tarih</h6>
+                                        <small class="text-muted">Öğretmen: Can Kuruoğlu | Öğrenci Sayısı: 38</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="subject-icon bg-secondary">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Coğrafya</h6>
+                                        <small class="text-muted">Öğretmen: Fatma Mermertaş | Öğrenci Sayısı: 35</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Ders İstatistikleri</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Ders Adı</th>
+                                        <th>Öğrenci Sayısı</th>
+                                        <th>Ortalama Not</th>
+                                        <th>En Yüksek Not</th>
+                                        <th>En Düşük Not</th>
+                                        <th>Başarı Oranı</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Matematik</td>
+                                        <td>45</td>
+                                        <td>78.5</td>
+                                        <td>98</td>
+                                        <td>45</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 85%">85%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fizik</td>
+                                        <td>32</td>
+                                        <td>72.3</td>
+                                        <td>95</td>
+                                        <td>40</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 75%">75%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kimya</td>
+                                        <td>28</td>
+                                        <td>68.9</td>
+                                        <td>92</td>
+                                        <td>35</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 65%">65%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Türkçe</td>
+                                        <td>50</td>
+                                        <td>82.1</td>
+                                        <td>97</td>
+                                        <td>50</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 88%">88%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tarih</td>
+                                        <td>38</td>
+                                        <td>76.4</td>
+                                        <td>96</td>
+                                        <td>42</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 80%">80%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal fade" id="yeniDersModal" tabindex="-1" aria-labelledby="yeniDersModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="yeniDersModalLabel">Yeni Ders Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="dersAdi" class="form-label">Ders Adı</label>
+                            <input type="text" class="form-control" id="dersAdi" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ogretmen" class="form-label">Öğretmen</label>
+                            <select class="form-select" id="ogretmen" required>
+                                <option value="" selected disabled>Seçiniz</option>
+                                <option>Ayşe Demir</option>
+                                <option>Mehmet Kaya</option>
+                                <option>Zeynep Şahin</option>
+                                <option>Ahmet Yılmaz</option>
+                                <option>Can Aydın</option>
+                                <option>Fatma Öztürk</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dersKodu" class="form-label">Ders Kodu</label>
+                            <input type="text" class="form-control" id="dersKodu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="dersAciklama" class="form-label">Ders Açıklaması</label>
+                            <textarea class="form-control" id="dersAciklama" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const yeniDersModal = document.getElementById('yeniDersModal');
+    const dersKaydetButton = yeniDersModal.querySelector('.modal-footer .btn-primary');
+    const dersTablosuDiv = document.querySelector('.card-body .list-group');
+    const modal = new bootstrap.Modal(yeniDersModal);
+    const derslerAnahtari = 'dersListesi';
+
+    // localStorage'dan dersleri yükle
+    function dersleriYukle() {
+        const kaydedilmisDersler = localStorage.getItem(derslerAnahtari);
+        if (kaydedilmisDersler) {
+            const dersler = JSON.parse(kaydedilmisDersler);
+            dersleriListeyeEkle(dersler);
+        }
+    }
+
+    // Dersleri listeye ekleme fonksiyonu (tek bir ders nesnesi alacak şekilde güncellendi)
+    function dersiListeyeEkle(ders) {
+        const yeniDersListItem = document.createElement('a');
+        yeniDersListItem.href = '#';
+        yeniDersListItem.classList.add('list-group-item', 'list-group-item-action');
+        yeniDersListItem.innerHTML = `
+            <div class="d-flex align-items-center">
+                <div class="subject-icon bg-primary">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div>
+                    <h6 class="mb-1">${ders.dersAdi}</h6>
+                    <small class="text-muted">Öğretmen: ${ders.ogretmen} | Ders Kodu: ${ders.dersKodu || 'Yok'}</small>
+                </div>
+            </div>
+        `;
+        dersTablosuDiv.appendChild(yeniDersListItem);
+    }
+
+    // Yeni ders ekleme ve listeye anında yansıtma
+    dersKaydetButton.addEventListener('click', function() {
+        const dersAdi = document.getElementById('dersAdi').value;
+        const ogretmen = document.getElementById('ogretmen').value;
+        const dersKodu = document.getElementById('dersKodu').value;
+        const dersAciklama = document.getElementById('dersAciklama').value;
+
+        const yeniDers = { dersAdi, ogretmen, dersKodu, dersAciklama };
+
+        const kaydedilmisDersler = localStorage.getItem(derslerAnahtari);
+        const dersler = kaydedilmisDersler ? JSON.parse(kaydedilmisDersler) : [];
+
+        dersler.push(yeniDers);
+
+        localStorage.setItem(derslerAnahtari, JSON.stringify(dersler));
+
+        // Yeni eklenen dersi doğrudan listeye ekle
+        dersiListeyeEkle(yeniDers);
+
+        modal.hide();
+        yeniDersModal.querySelector('form').reset();
+    });
+
+    // Sayfa yüklendiğinde dersleri yükle
+    dersleriYukle();
+});
+</script>
