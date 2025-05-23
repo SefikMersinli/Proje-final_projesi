@@ -1,0 +1,30 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ecf0f1;
+}
+
+.register-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #3498db;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.form-title {
+    font-weight: 600;
+    color: #2c3e50;
+}  
