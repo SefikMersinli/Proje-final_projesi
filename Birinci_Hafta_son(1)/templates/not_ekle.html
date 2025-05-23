@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Not Ekle{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ ogrenci.ad }} {{ ogrenci.soyad }} için Not Ekle/Güncelle</h2>
+    <hr>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="ders_id" class="form-label">Ders Seçin:</label>
+            <select class="form-control" id="ders_id" name="ders_id" required>
+                <option value="">Ders Seçiniz</option>
+                {% for ders in dersler %}
+                    <option value="{{ ders.id }}">{{ ders.ders_adi }} ({{ ders.ders_kodu }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="not_degeri" class="form-label">Not Değeri (0-100):</label>
+            <input type="number" class="form-control" id="not_degeri" name="not_degeri" min="0" max="100" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Notu Kaydet</button>
+        <a href="{{ url_for('ogrenci_detay', ogrenci_id=ogrenci.id) }}" class="btn btn-secondary">İptal</a>
+    </form>
+</div>
+{% endblock %}
