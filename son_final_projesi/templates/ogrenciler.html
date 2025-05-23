@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Öğrenci Paneli - {{ kullanici.kullanici_adi }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .navbar { background-color: #2980b9; overflow: hidden; margin-bottom: 20px; }
+        .navbar a { float: left; display: block; color: rgb(255, 255, 255); text-align: center; padding: 14px 20px; text-decoration: none; }
+        .navbar a:hover { background-color: #ddd; color: rgb(21, 204, 52); }
+        .navbar .logout { float: right; }
+        .container { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .flash-message { padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .flash-message.basarili { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .flash-message.hata { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .flash-message.bilgi { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; } /* Bilgi mesajları için ekledim */
+        .student-list { margin-top: 30px; }
+        .student-list table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .student-list th, .student-list td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .student-list th { background-color: #f2f2f2; }
+        .student-actions a, .student-actions button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .student-actions .edit-btn { background-color: #007bff; }
+        .student-actions .add-note-btn { background-color: #17a2b8; } 
+        .student-actions .delete-btn { background-color: #dc3545; }
+        .add-student-btn { display: inline-block; background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; margin-bottom: 20px;}
+        .add-student-btn:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('anasayfa_kullanici') }}">Ana Sayfa</a>
+        <a href="{{ url_for('dersler') }}">Dersler</a>
+        <a href="{{ url_for('notlar') }}">Notlar</a>
+        <a href="{{ url_for('raporlar') }}">Raporlar</a>
+        <a href="{{ url_for('profil_ayarlari') }}">Profil Ayarları</a>
+        <a href="{{ url_for('cikis_ekrani') }}" class="logout">Çıkış Yap</a>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1>Hoş Geldiniz, {{ kullanici.kullanici_adi }}!</h1>
+
+        <p><strong>Size özel mesaj:</strong></p>
+        <p>{{ kullanici.kisisel_mesaj }}</p>
+
+        <p>Profil ayarlarınızdan size özel mesajı değiştirebilirsiniz.</p>
+
+        <hr>
+
+        <h2>Öğrenci Listesi</h2>
+        <a href="{{ url_for('ogrenci_ekle') }}" class="add-student-btn">Yeni Öğrenci Ekle</a>
+
+        {% if ogrenciler %}
+            <div class="student-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Numara</th>
+                            <th>Sınıf</th>
+                            <th>Doğum Tarihi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ogrenci in ogrenciler %}
+                            <tr>
+                                <td><a href="{{ url_for('ogrenci_detay', ogrenci_id=ogrenci.id) }}">{{ ogrenci.ad }} {{ ogrenci.soyad }}</a></td>
+                                <td>{{ ogrenci.numara }}</td>
+                                <td>{{ ogrenci.sinif or 'Belirtilmemiş' }}</td>
+                                <td>{{ ogrenci.dogum_tarihi or 'Belirtilmemiş' }}</td>
+                                <td class="student-actions">
+                                    <a href="{{ url_for('ogrenci_duzenle', ogrenci_id=ogrenci.id) }}" class="edit-btn">Düzenle</a>
+                                    <a href="{{ url_for('not_ekle', ogrenci_id=ogrenci.id) }}" class="add-note-btn">Not Ekle</a>
+                                    <form action="{{ url_for('ogrenci_sil', ogrenci_id=ogrenci.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="delete-btn" onclick="return confirm('Bu öğrenciyi silmek istediğinizden emin misiniz?');">Sil</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Henüz eklenmiş öğrenci bulunmuyor. Yeni bir öğrenci eklemek için yukarıdaki butonu kullanın.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
